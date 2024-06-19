@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Container, VStack, Heading, Input, Button, Box, Text, List, ListItem, IconButton } from "@chakra-ui/react";
-import { FaPlus, FaTrash } from "react-icons/fa";
+import { FaPlus, FaTrash, FaPlay } from "react-icons/fa";
 
 const CreatePlaylist = () => {
   const [playlistName, setPlaylistName] = useState("");
   const [song, setSong] = useState("");
   const [songs, setSongs] = useState([]);
+  const [currentSong, setCurrentSong] = useState(null);
 
   const addSong = () => {
     if (song.trim() !== "") {
@@ -16,6 +17,12 @@ const CreatePlaylist = () => {
 
   const removeSong = (index) => {
     setSongs(songs.filter((_, i) => i !== index));
+  };
+
+  const playSong = (song) => {
+    setCurrentSong(song);
+    const audio = new Audio(song);
+    audio.play();
   };
 
   const handleSubmit = () => {
@@ -46,11 +53,19 @@ const CreatePlaylist = () => {
           {songs.map((song, index) => (
             <ListItem key={index} display="flex" justifyContent="space-between" alignItems="center">
               <Text>{song}</Text>
-              <IconButton
-                icon={<FaTrash />}
-                colorScheme="red"
-                onClick={() => removeSong(index)}
-              />
+              <Box>
+                <IconButton
+                  icon={<FaPlay />}
+                  colorScheme="green"
+                  onClick={() => playSong(song)}
+                  mr={2}
+                />
+                <IconButton
+                  icon={<FaTrash />}
+                  colorScheme="red"
+                  onClick={() => removeSong(index)}
+                />
+              </Box>
             </ListItem>
           ))}
         </List>
